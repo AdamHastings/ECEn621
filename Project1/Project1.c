@@ -1,20 +1,36 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #define M_PI 3.14159265358979323846
 
 
-double computeSine(double delta) {
+double computeDelta_sine(double delta) {
 	return delta - (delta*delta*delta)/6 +(delta*delta*delta*delta*delta) / 120;
 }
 
+double computeDelta_cosine(double delta) {
+	return 1 - (delta*delta)/2 + (delta*delta*delta*delta)/24 - (delta*delta*delta*delta*delta*delta)/720;
+}
+
+double recurrence_sin(double sin) {
+	return 
+}
+
+double recurrence_cos(double cos) {
+
+}
+
+double sine, cosine;
 
 int main() {
   int N_array[1] = {20};
 
   for (int i=0; i < sizeof(N_array)/sizeof(N_array[0]); i++) {
+
 	int N = N_array[i];
-	// int length = snprintf( NULL, 0, "%d", N ) + 4;
-	// char* str = malloc( length + 1 );
+	printf("------ %d ------\n", N);
+	int length = snprintf( NULL, 0, "%d", N );
+	char* str = malloc( sizeof(char) * (length + 5) );
 	snprintf( str, length + 1, "%d.txt", N );
 
 	FILE *fp;
@@ -22,9 +38,12 @@ int main() {
 	free(str);
 
 	double delta = M_PI / (2 * N);
+	double sin_theta = computeDelta_sine(delta);
+	double cos_theta = computeDelta_cosine(delta);
 
-	double sine, cosine;
 
+
+	// TODO: N*4
 	for (int j=0; j < N*4; j++) {
 		if (j == 0) {
 			sine = 0;
@@ -39,10 +58,10 @@ int main() {
 			sine = -1;
 			cosine = 0;
 		} else {
-			sine += computeSine(delta*j);
+			sine = recurrence_sin(sin_theta, 
 		}
-		printf("%0d\n", sine);
-		fprintf(fp, "%d\n", sine);
+		printf("%f\n", sine);
+		fprintf(fp, "%f\n", sine);
 	}
 
 	fclose(fp);
