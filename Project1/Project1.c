@@ -1,4 +1,11 @@
 #include <stdio.h>
+#include <math.h>
+
+
+double computeSine(int N, int j) {
+	return 0;
+}
+
 
 int main() {
   int N_array[3] = {20, 50, 100};
@@ -11,9 +18,14 @@ int main() {
 
 	FILE *fp;
 	fp = fopen(str, "w+");
-	fprintf(fp, "%d\n", N);
-	fclose(fp);
 	free(str);
+
+	for (int j=0; j < N*4; j++) {
+		int value_j = computeSine(N, j);
+		fprintf(fp, "%d\n", value_j);
+	}
+
+	fclose(fp);
   }
 
   return 0;
