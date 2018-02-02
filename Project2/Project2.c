@@ -8,24 +8,44 @@
 // Pi in 8.24 fixed-point: 00000011 00100100 00111111 01110000
 
 
-int computeDivision(int N, int D) {
+int32_t int_to_fixedpt(int x) {
+     return x << (24 - 1);
+}
+
+// 8.24 fixed-point representation
+double fixedpt_to_float(int32_t x) {
+     int whole_bits = (x >> 24);
+     double fractional_bits = ((double) (((unsigned) x << 8) >> 8)) / (2 << (24 - 1));
+     double representation = (double) whole_bits + fractional_bits;
+     return representation;
+}
+
+// Get the index of the most significant bit 
+int get_MSB (int32_t x) {
+     int i = 0;
+     while (x > 1) {
+          i++;
+          x = x >> 1;
+     }
+     return i;
+}
+
+int computeDivision(int32_t numerator, int32_t denominator) {
+     
+     // First normalize denominator to between 0.5 and 1
+     int msb = get_MSB(denominator);
+     int32_t d_norm = denominator >> msb;
+     printf("%f\n", fixedpt_to_float(d_norm));
+
      int interations = 10;
      for (int i=0; i<interations; i++) {
-          N = N*(2-D);
-          D = D*(2-D);
+          //N = N*(2-D);
+          //D = D*(2-D);
      }
-     int Q = N;
+     int32_t Q = numerator;
      return Q;
 }
 
-int get_MSB (int x) {
-	int i = 0;
-	while (x > 1) {
-		i++;
-		x = x >> 1;
-	}
-	return i;
-}
 
 double computeDelta_sine(double delta) {
      return delta - (delta*delta*delta)/6 +(delta*delta*delta*delta*delta) / 120;
@@ -51,7 +71,10 @@ double recurrence_cos(double sin_theta, double cos_theta, double sine, double co
 int main() {
 	int N_array[3] = {20, 50, 100};
 
-	for (int i=0; i < sizeof(N_array)/sizeof(N_array[0]); i++) {
+     // pi in 8.24 fixed-point notation
+     int32_t pi = 0b00000011001001000011111101110000;
+
+	for (int i=0; i < 3; i++) {
 		int N = N_array[i];
 		int length = snprintf(NULL, 0, "%d", N );
 		char* str = malloc( sizeof(char) * (length + 5));
@@ -61,9 +84,10 @@ int main() {
 		fp = fopen(str, "w+");
 		free(str);
 
-		int32_t pi = 0b00000011001001000011111101110000;
-
 		// Commented out for project 2
+          //double delta_new = fixedpt_to_float(computeDivision(pi, int_to_fixedpt(2*N)));
+          int32_t delta_fxp = computeDivision(pi, int_to_fixedpt(2*N));
+          printf("delta: %f\n", fixedpt_to_float(delta_fxp));
 		double delta = M_PI / (2 * N);
 		double sin_theta = computeDelta_sine(delta);
 		double cos_theta = computeDelta_cosine(delta);
