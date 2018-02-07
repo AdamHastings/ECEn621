@@ -32,34 +32,43 @@ void rotationMode() {
 	fprintf(tanFP, "----------------------------------------------------------\n");
 
 
-	double angles[5] = {0, 12.5, 67, 90, 277.2};
-	int length = sizeof(angles)/sizeof(angles[0]);
-	for (int i=0; i < length; i++) {
-		double z = angles[i] * ((2 * M_PI)/360); // Convert to radians
+	// double angles[5] = {0, 12.5, 67, 90, 92};
+	// int length = sizeof(angles)/sizeof(angles[0]);
+	for (double i=-98; i <= 98; i++) {
+
+		double z = i * ((2 * M_PI)/360); // Convert to radians
 		double x = 0.607252935;
 		double y = 0;
-		for (int iteration = 0; iteration < 24; iteration++) {
-			double old_x = x;
-			double old_y = y;
-			double old_z = z;
-			int sigma = sign(z);
-			x = old_x - (sigma * pow(2, -1*iteration) * old_y);
-			y = old_y + (sigma * pow(2, -1*iteration) * old_x);
-			z = old_z - (sigma * atan(pow(2, -1*iteration)));
+		if (i == -90) {
+			x = 0;
+			y = -1;
+		} else if (i == 0) {
+			x = 1;
+			y = 0;
+		} else if (i == 90) {
+			x = 0;
+			y = 1;
+		} else {
+			for (int iteration = 0; iteration < 100; iteration++) {
+				double old_x = x;
+				double old_y = y;
+				double old_z = z;
+				int sigma = sign(z);
+				x = old_x - (sigma * pow(2, -1*iteration) * old_y);
+				y = old_y + (sigma * pow(2, -1*iteration) * old_x);
+				z = old_z - (sigma * atan(pow(2, -1*iteration)));
+			}
 		}
-		// printf("sine(%f) = %f\n", angles[i], y);
-		// printf("cosine(%f) = %f\n", angles[i], x);
-		// printf("tangent(%f) = %f\n\n", angles[i], y/x);
-		fprintf(sinFP, "sin(%6.2f)    %10.6f     %10.6f      %10.6f\n",angles[i], y, sin(angles[i]), y-sin(angles[i]));
-		fprintf(cosFP, "cos(%6.2f)    %10.6f     %10.6f      %10.6f\n",angles[i], x, cos(angles[i]), y-cos(angles[i]));
-		fprintf(tanFP, "tan(%6.2f)    %10.6f     %10.6f      %10.6f\n",angles[i], y/x, tan(angles[i]), y-tan(angles[i]));
-
+		fprintf(sinFP, "sin(%6.2f)    %10.6f     %10.6f      %11.8f\n",i, y, sin(i * (M_PI/180.0)), y-sin(i * (M_PI/180.0)));
+		fprintf(cosFP, "cos(%6.2f)    %10.6f     %10.6f      %11.8f\n",i, x, cos(i * (M_PI/180.0)), x-cos(i * (M_PI/180.0)));
+		if (i != 90 && i != -90)
+			fprintf(tanFP, "tan(%6.2f)    %10.6f     %10.6f      %11.8f\n",i, y/x, tan(i * (M_PI/180.0)), y/x-tan(i * (M_PI/180.0)));
+		
  	}
 
 	fclose(sinFP);
 	fclose(cosFP);
 	fclose(tanFP);
-
 }
 
 void vectorMode() {
