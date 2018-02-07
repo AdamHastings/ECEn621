@@ -4,6 +4,7 @@
 #include <math.h>
 #define M_PI 3.14159265358979323846
 
+// Get the sign of a double
 int sign(double x) {
 	if (x >= 0)
 		return 1;
@@ -11,32 +12,31 @@ int sign(double x) {
 		return -1;
 }
 
+// Run the rotation mode CORDIC algorithm
 void rotationMode() {
 
+	// Create file pointers and open files
 	FILE *sinFP, *cosFP, *tanFP;
 	sinFP = fopen("sin.txt", "w+");
 	cosFP = fopen("cos.txt", "w+");
 	tanFP = fopen("tan.txt", "w+");
 
+	// Write headers
 	fprintf(sinFP, "Value	 	 CORDIC	 	math.h		Difference\n");
 	fprintf(sinFP, "----------------------------------------------------------\n");
-
-
 	fprintf(cosFP, "Value	 	 CORDIC		math.h		Difference\n");
 	fprintf(cosFP, "----------------------------------------------------------\n");
-
-
 	fprintf(tanFP, "Value		 CORDIC		math.h		Difference\n");
 	fprintf(tanFP, "----------------------------------------------------------\n");
 
-
-	// double angles[5] = {0, 12.5, 67, 90, 92};
-	// int length = sizeof(angles)/sizeof(angles[0]);
+	// Test angles in the range [-98, 98]
 	for (double i=-98; i <= 98; i++) {
 
 		double z = i * ((2 * M_PI)/360); // Convert to radians
-		double x = 0.607252935;
+		double x = 0.607252935; // 1/K
 		double y = 0;
+
+		// Hard code values that don't need to be approximated
 		if (i == -90) {
 			x = 0;
 			y = -1;
@@ -47,28 +47,36 @@ void rotationMode() {
 			x = 0;
 			y = 1;
 		} else {
+			// Run CORDIC algorithms
 			for (int iteration = 0; iteration < 100; iteration++) {
+				// Save old values
 				double old_x = x;
 				double old_y = y;
 				double old_z = z;
+
+				// Get next iteration
 				int sigma = sign(z);
 				x = old_x - (sigma * pow(2, -1*iteration) * old_y);
 				y = old_y + (sigma * pow(2, -1*iteration) * old_x);
 				z = old_z - (sigma * atan(pow(2, -1*iteration)));
 			}
 		}
+
+		// Write to file
 		fprintf(sinFP, "sin(%6.2f)    %10.6f     %10.6f      %11.8f\n",i, y, sin(i * (M_PI/180.0)), y-sin(i * (M_PI/180.0)));
 		fprintf(cosFP, "cos(%6.2f)    %10.6f     %10.6f      %11.8f\n",i, x, cos(i * (M_PI/180.0)), x-cos(i * (M_PI/180.0)));
-		if (i != 90 && i != -90)
+		if (i != 90 && i != -90) // Tan(+/-90) is undefined
 			fprintf(tanFP, "tan(%6.2f)    %10.6f     %10.6f      %11.8f\n",i, y/x, tan(i * (M_PI/180.0)), y/x-tan(i * (M_PI/180.0)));
 		
  	}
 
+ 	// Close the files
 	fclose(sinFP);
 	fclose(cosFP);
 	fclose(tanFP);
 }
 
+// Run the vector mode CORDIC algorithm
 void vectorMode() {
 	// TODO
 }
