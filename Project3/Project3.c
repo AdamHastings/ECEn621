@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
+#define M_PI 3.14159265358979323846
 
 int sign(double x) {
 	if (x == 0)
@@ -13,10 +14,28 @@ int sign(double x) {
 }
 
 void rotationMode() {
-	double angles[5] = {0, 12, 25.5, 90, 277.2};
+
+	FILE *sinFP, *cosFP, *tanFP;
+	sinFP = fopen("sin.txt", "w+");
+	cosFP = fopen("cos.txt", "w+");
+	tanFP = fopen("tan.txt", "w+");
+
+	fprintf(sinFP, "Value	 	 CORDIC	 	math.h		Difference\n");
+	fprintf(sinFP, "----------------------------------------------------------\n");
+
+
+	fprintf(cosFP, "Value	 	 CORDIC		math.h		Difference\n");
+	fprintf(cosFP, "----------------------------------------------------------\n");
+
+
+	fprintf(tanFP, "Value		 CORDIC		math.h		Difference\n");
+	fprintf(tanFP, "----------------------------------------------------------\n");
+
+
+	double angles[5] = {0, 12.5, 67, 90, 277.2};
 	int length = sizeof(angles)/sizeof(angles[0]);
 	for (int i=0; i < length; i++) {
-		double z = angles[i];
+		double z = angles[i] * ((2 * M_PI)/360); // Convert to radians
 		double x = 0.607252935;
 		double y = 0;
 		for (int iteration = 0; iteration < 24; iteration++) {
@@ -28,17 +47,30 @@ void rotationMode() {
 			y = old_y + (sigma * pow(2, -1*iteration) * old_x);
 			z = old_z - (sigma * atan(pow(2, -1*iteration)));
 		}
-		printf("sine(%f) = %f\n", angles[i], y);
-		printf("cosine(%f) = %f\n", angles[i], x);
-		printf("tangent(%f) = %f\n\n", angles[i], y/x);
+		// printf("sine(%f) = %f\n", angles[i], y);
+		// printf("cosine(%f) = %f\n", angles[i], x);
+		// printf("tangent(%f) = %f\n\n", angles[i], y/x);
+		fprintf(sinFP, "sin(%6.2f)    %10.6f     %10.6f      %10.6f\n",angles[i], y, sin(angles[i]), y-sin(angles[i]));
+		fprintf(cosFP, "cos(%6.2f)    %10.6f     %10.6f      %10.6f\n",angles[i], x, cos(angles[i]), y-cos(angles[i]));
+		fprintf(tanFP, "tan(%6.2f)    %10.6f     %10.6f      %10.6f\n",angles[i], y/x, tan(angles[i]), y-tan(angles[i]));
+
  	}
+
+	fclose(sinFP);
+	fclose(cosFP);
+	fclose(tanFP);
+
+}
+
+void vectorMode() {
+
 }
 
 
 int main() {
 	
 	rotationMode();
-	// vectorMode();
+	vectorMode();
 
      /*
      int N_array[3] = {20, 50, 100};
