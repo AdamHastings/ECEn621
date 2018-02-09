@@ -123,6 +123,8 @@ void vectorMode() {
 		// Write to file
 		double arctan_mathlib = atan(i * (M_PI/180.0));
           fprintf(arctanFP, "arctan(%6.2f)    %10.6f     %10.6f      %11.8f\n",i, z, arctan_mathlib, z-arctan_mathlib);
+
+          // do something about 90 and -90
  	}
 
  	// Close the file
@@ -132,7 +134,7 @@ void vectorMode() {
 
 int main() {
 
-	// rotationMode();
+	rotationMode();
 	vectorMode();
 
 	return 0;
