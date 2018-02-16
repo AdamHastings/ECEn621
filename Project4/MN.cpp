@@ -18,8 +18,26 @@ double XMAX, XMIN;  // Limits on what can be normalized, computed at startup
 // return 0 if residual diverges, 1 if it converges
 int mul_normalize(double x, int D[N])
 {
+    double x_k = x;
+    double z_k = 1.0 - x;
     // put your code here
+    for (int i=1; i < N; i++) {
+        // First you must pick you D[i]
+
+        // Then run the recurrences
+        x_k = x_k * (1 + math.pow(2, -i) * D[i]);
+        // z_k = math.pow(2, i) * (1 - x_k)
+        z_k = 2 * (z_k * (1 + math.pow(2, -i) * D[i]) - D[i]);
+    }
+
 }
+// x_0 is what is passed in
+// z_0 is 1.0 - z
+// XMIN and XMAX bound x, not z
+// We have to come up with bounds for z
+// Matt said "basically just +/-2"
+
+
 
 // compute the range over which mul_normalize can converge
 void minmax()
