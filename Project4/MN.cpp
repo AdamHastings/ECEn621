@@ -3,40 +3,81 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+using namespace std;
 
 // turns on debugging, prints i, z[i], D[i] each iteration in mul_normalize
-#define DEBUGX
+// #define DEBUGX
+#ifdef DEBUGX
+#  define DEBUG_PRINT(i, z, d) (printf("%i   %0f %0d\n", i, z, d))
+#else
+#  define DEBUG_PRINT(i, z, d) ((void)0)
+#endif
 
 // number of digits computed
 #define N 40
 
-int D[N]; // Digit array
+int D[N], L[N], U[N]; // Digit array
 
 double XMAX, XMIN;  // Limits on what can be normalized, computed at startup
+
+double ZMAX = 2;
+double ZMIN = -2;
+
+// Select next digit in digit recurrence
+int getNextDigit(double z, int i) {
+    // double upper = U[i];
+    // double lower = L[i];
+    // double range = upper - lower;
+
+
+    if (z > 0.5)
+        return 1;
+    else if (z > -0.625)
+        return 0;
+    else if (i == 0)
+        return 0;
+    else
+        return -1;
+}
+
+// // Compute Bounds (I don't think this is necessary)
+// void computeUandL() {
+//     L[N-1] = ZMIN;
+//     U[N-1] = ZMAX;
+
+//     for (int i=N-2; i>=0; i--) {
+//         L[i] = ((L[i+1]/2) - 1)/ (1 - pow(2, -i));
+//         U[i] = ((U[i+1]/2) + 1)/ (1 + pow(2, -i));
+//     }
+// }
 
 // compute the sequence of digits D that normalize x --> 1.0L
 // return 0 if residual diverges, 1 if it converges
 int mul_normalize(double x, int D[N])
 {
+
     double x_k = x;
     double z_k = 1.0 - x;
-    // put your code here
-    for (int i=1; i < N; i++) {
-        // First you must pick you D[i]
+    D[0] = getNextDigit(z_k, 0);
+    DEBUG_PRINT(0, z_k, D[0]);
 
-        // Then run the recurrences
-        x_k = x_k * (1 + math.pow(2, -i) * D[i]);
-        // z_k = math.pow(2, i) * (1 - x_k)
-        z_k = 2 * (z_k * (1 + math.pow(2, -i) * D[i]) - D[i]);
+    for (int i=1; i < N; i++) {
+        // Find next x (not even sure this is necessary)
+        x_k = x_k * (1 + pow(2.0, -i) * D[i-1]);
+        // Find next z_k
+        z_k = 2 * (z_k * (1 + pow(2.0, -(i-1)) * D[i-1]) - D[i-1]);
+        // Select next d
+        D[i] = getNextDigit(z_k, i);
+        // Print if debugging 
+        DEBUG_PRINT(i, z_k, D[i]);
     }
+    if (z_k > ZMIN && z_k < ZMAX)
+        return 1;
+    else
+        return 0;
 
 }
-// x_0 is what is passed in
-// z_0 is 1.0 - z
-// XMIN and XMAX bound x, not z
-// We have to come up with bounds for z
-// Matt said "basically just +/-2"
-
 
 
 // compute the range over which mul_normalize can converge
@@ -64,7 +105,8 @@ void minmax()
 int main(int argc, char* argv[])
 {
     double x;
-    int i;
+    computeUandL();
+
 
     minmax();  // init XMIN and XMAX
     printf("XMIN = %f    XMAX = %f\n", XMIN, XMAX);
@@ -78,12 +120,12 @@ int main(int argc, char* argv[])
     // stop here until the above normalize works
     // test by uncommenting #define DEBUGX above and comparing results with Dr. Wilde
     // if it works, remove the next line, and comment out #define DEBUGX above
-    return 0;
+    // return 0;
 
     // try to break the algorithm...
     // test random numbers until the cows come home
  
-    srand(42554); // everyone choose their own seed to the random number generator, please
+    srand(45893); // everyone choose their own seed to the random number generator, please
 
     for (;;)  // loop forever
     {
