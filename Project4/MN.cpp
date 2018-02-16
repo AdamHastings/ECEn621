@@ -7,9 +7,9 @@
 using namespace std;
 
 // turns on debugging, prints i, z[i], D[i] each iteration in mul_normalize
-// #define DEBUGX
+#define DEBUGX
 #ifdef DEBUGX
-#  define DEBUG_PRINT(i, z, d) (printf("%i   %0f %0d\n", i, z, d))
+#  define DEBUG_PRINT(i, z, d) (printf("%i\t% 8f\t% 0d\n", i, z, d))
 #else
 #  define DEBUG_PRINT(i, z, d) ((void)0)
 #endif
@@ -69,7 +69,7 @@ int mul_normalize(double x, int D[N])
         z_k = 2 * (z_k * (1 + pow(2.0, -(i-1)) * D[i-1]) - D[i-1]);
         // Select next d
         D[i] = getNextDigit(z_k, i);
-        // Print if debugging 
+        // Print if debugging
         DEBUG_PRINT(i, z_k, D[i]);
     }
     if (z_k > ZMIN && z_k < ZMAX)
@@ -105,16 +105,19 @@ void minmax()
 int main(int argc, char* argv[])
 {
     double x;
-    computeUandL();
+//     computeUandL();
 
 
     minmax();  // init XMIN and XMAX
-    printf("XMIN = %f    XMAX = %f\n", XMIN, XMAX);
+    printf("XMIN = %f    XMAX = %f\n\n", XMIN, XMAX);
 
-    x = 1.23456789L;
-    mul_normalize(x, D);
+//     x = 1.23456789L;
+//     mul_normalize(x, D);
 
     x = 1.987654321L;
+    printf("Results for x = %f\n\n", x);
+    printf("i       z[i]            D[i]\n");
+    printf("---     ---------       ----\n");
     mul_normalize(x, D);
 
     // stop here until the above normalize works
@@ -124,20 +127,20 @@ int main(int argc, char* argv[])
 
     // try to break the algorithm...
     // test random numbers until the cows come home
- 
-    srand(45893); // everyone choose their own seed to the random number generator, please
 
-    for (;;)  // loop forever
-    {
-        x = (XMAX-XMIN)*((double)rand()/(double)RAND_MAX)+XMIN;
-        if ( mul_normalize(x, D)==0 )
-        {
-            // should not ever happen, but if it does....
-            printf("Diverge: x=%f *****************\n", x);
-            return 1;
-        }
-        else printf("%f\n", x); // converges, just print number
-    }
+//     srand(45893); // everyone choose their own seed to the random number generator, please
+
+//     for (;;)  // loop forever
+//     {
+//         x = (XMAX-XMIN)*((double)rand()/(double)RAND_MAX)+XMIN;
+//         if ( mul_normalize(x, D)==0 )
+//         {
+//             // should not ever happen, but if it does....
+//             printf("Diverge: x=%f *****************\n", x);
+//             return 1;
+//         }
+//         else printf("%f\n", x); // converges, just print number
+//     }
 
     return 0;
 }
