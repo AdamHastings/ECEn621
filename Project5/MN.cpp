@@ -9,9 +9,9 @@ using namespace std;
 // turns on debugging, prints i, z[i], D[i] each iteration in mul_normalize
 #define DEBUGX
 #ifdef DEBUGX
-#  define DEBUG_PRINT(i, z, d) (printf("%i\t% 8f\t% 0d\n", i, z, d))
+#  define DEBUG_PRINT(i, z, d, y) (printf("%i\t%8f\t%0d\t%0.17f\n", i, z, d, y))
 #else
-#  define DEBUG_PRINT(i, z, d) ((void)0)
+#  define DEBUG_PRINT(i, z, d, y) ((void)0)
 #endif
 
 // number of digits computed
@@ -20,6 +20,9 @@ using namespace std;
 int D[N], L[N], U[N]; // Digit array
 
 double XMAX, XMIN;  // Limits on what can be normalized, computed at startup
+double YMAX, YMIN;
+// YMIN = -1.56202383321486216
+// YMAX = 
 
 double ZMAX = 2;
 double ZMIN = -2;
@@ -33,7 +36,7 @@ int getNextDigit(double z, int i) {
 
     if (z > 0.5)
         return 1;
-    else if (z > -0.625)
+    else if (z > -0.5)
         return 0;
     else if (i == 0)
         return 0;
@@ -52,25 +55,41 @@ int getNextDigit(double z, int i) {
 //     }
 // }
 
+
+
 // compute the sequence of digits D that normalize x --> 1.0L
 // return 0 if residual diverges, 1 if it converges
 int mul_normalize(double x, int D[N])
 {
 
     double x_k = x;
-    double z_k = 1.0 - x;
+    // double old_x_k;
+    double z_k = 2*(1.0 - x);
+    double y_k = 0;
     D[0] = getNextDigit(z_k, 0);
-    DEBUG_PRINT(0, z_k, D[0]);
+    // D[0] = -1;
+    DEBUG_PRINT(0, z_k, D[0], y_k);
 
     for (int i=1; i < N; i++) {
+
         // Find next x (not even sure this is necessary)
-        x_k = x_k * (1 + pow(2.0, -i) * D[i-1]);
+        // x_k = x_k * (1 + pow(2.0, -i) * D[i-1]);
+        // old_x_k = x_k;
+        x_k = x_k * (1 + D[i-1] * pow(2, -(i-1)));
+        
+        // Find next y_k
+        y_k = y_k - log(1 + D[i-1] * pow(2, -(i-1)));
+
         // Find next z_k
-        z_k = 2 * (z_k * (1 + pow(2.0, -(i-1)) * D[i-1]) - D[i-1]);
+        // z_k = 2 * (z_k * (1 + pow(2.0, -(i-1)) * D[i-1]) - D[i-1]);
+        z_k = pow(2, i-1) * (1 - x_k);
+        
         // Select next d
         D[i] = getNextDigit(z_k, i);
+        // D[i] = -1;
+        
         // Print if debugging
-        DEBUG_PRINT(i, z_k, D[i]);
+        DEBUG_PRINT(i, z_k, D[i], y_k);
     }
     if (z_k > ZMIN && z_k < ZMAX)
         return 1;
@@ -87,7 +106,7 @@ void minmax()
     int i;         // iteration counter
     double shift;  // 2^(-i)
 
-    for (i=0, shift=1.0L, x=1.0L; i<N; i++)
+    for (i=1, shift=0.5L, x=1.0L; i<N; i++)
     {
         x = x * (1.0L + shift); // x = 1.11111111... (by multiplicative rule of interpretation)
         shift = shift/2.0L;
@@ -102,23 +121,42 @@ void minmax()
     XMAX = 1.0L/x;
 }
 
+// void minmax () {
+    
+//     double L_k = -2;
+//     double U_k =  2;
+
+//     for (int i=N; i>0; i--) {
+
+//         if (i != 1)
+//             L_k = ((L_k)/2 - 1)/(1 - pow(2, -(i-1)));
+//         U_k = ((U_k)/2 + 1)/(1 + pow(2, -(i-1)));
+
+//     }
+
+//     XMAX = U_k;
+//     XMIN = L_k;
+
+// }
+
 int main(int argc, char* argv[])
 {
-    double x;
+    // double x;
 //     computeUandL();
 
 
     minmax();  // init XMIN and XMAX
     printf("XMIN = %f    XMAX = %f\n\n", XMIN, XMAX);
 
-//     x = 1.23456789L;
-//     mul_normalize(x, D);
-
-    x = 1.987654321L;
-    printf("Results for x = %f\n\n", x);
-    printf("i       z[i]            D[i]\n");
-    printf("---     ---------       ----\n");
+    double x = 1.23456789L;
+    printf("Results for x = %0.10f\n\n", x);
+    printf(" i        z[i]          D[i]    Y[i+1]\n");
+    printf("---     ---------       ----    ------\n");
     mul_normalize(x, D);
+
+
+    // x = 1.987654321L;
+    // mul_normalize(x, D);
 
     // stop here until the above normalize works
     // test by uncommenting #define DEBUGX above and comparing results with Dr. Wilde
@@ -142,5 +180,5 @@ int main(int argc, char* argv[])
 //         else printf("%f\n", x); // converges, just print number
 //     }
 
-    return 0;
+    // return 0;
 }
