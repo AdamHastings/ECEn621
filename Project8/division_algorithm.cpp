@@ -98,10 +98,6 @@ int main() {
      // set cout precision to 16 decimal places
 	cout << fixed << setprecision(16);
 
-     // // provide dividend (x) and divisor (d)
-	// double x = 0.66666666;
-	// double d = 0.7;
-
      // before any division, make sure to populate the reciprocal table
 	populate_table();
 
