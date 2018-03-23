@@ -25,8 +25,6 @@ double getClosest(double pos){
      for (auto it = reciprocal_table.begin(); it != reciprocal_table.end(); it++) {
           auto it_next = next(it);
 
-          // cout << "\tcurr_val: " << curr_val;
-
           if(it_next == reciprocal_table.end()){  // if it is the last element in the map
                return it->first;
           } else {
