@@ -38,8 +38,9 @@ int get_next_digit(double w) {
 
 double divide(double x, double d) {
 
-	double x_prime = x * reciprocal_table[d];
-
+	// double x_prime = x * reciprocal_table[d];
+	// double x_prime = reciprocal_table[d];
+	reciprocal_table[d];
 
 
 	// double d_prime = d * reciprocal_table[d];
@@ -75,13 +76,17 @@ double getClosest(double pos){
      // if(reciprocal_table.size() < 2) return reciprocal_table.begin()->first;              // if only one element in map, return it
 
 
-     int i=0;
+     // int i=0;
 
      for (auto it = reciprocal_table.begin(); it != reciprocal_table.end(); it++) {
           double next_val = next(it)->first;
           double curr_val = it->first;
 
-          cout << "iteration: " << i << endl << "\tcurr_val: " << curr_val << "\tnext_val: " << next_val << endl;
+          // cout << "iteration: " << i << endl;
+
+
+          cout << "\tcurr_val: " << curr_val << " -> " << it->second << endl;
+          cout << "\tnext_val: " << next_val <<  " -> " << next(it)->second << endl;
 
 
           // double test = .62;
@@ -91,7 +96,7 @@ double getClosest(double pos){
           //      cout << "xx: " <<  next_val << endl;
           //      return curr_val;
           // }
-          i++;
+          // i++;
      }
 
 
