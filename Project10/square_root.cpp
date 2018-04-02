@@ -1,9 +1,10 @@
 #include <iostream>
 #include <cstdlib>
-#include <math.h>
+#include <math.h>       /* pow */
 #include <time.h>       /* time */
 #include <stdlib.h>     /* srand, rand */
-#include <iomanip>
+#include <iomanip>      /* set precision */
+
 using namespace std;
 
 #define RADIX 4
@@ -11,7 +12,6 @@ using namespace std;
 #define RHO ((A)/(RADIX * 1.0 - 1))
 #define K 32
 #define NUM_TESTS   10000
-
 
 double getLowerBound(int d, double S) {
 	return 2 * S * (d - RHO) + pow((d - RHO), 2) * pow(RADIX, -(K + 1));
@@ -29,7 +29,6 @@ int getNextDigit(double z_k, double S_k) {
 	// cout << "L_n1: " << L_n1 << endl;
 	// cout << "L_n2: " << L_n2 << endl;
 
-
 	double scaled_residual = RADIX * z_k;
 	if (scaled_residual >= L_2)
 		return 2;
@@ -43,14 +42,6 @@ int getNextDigit(double z_k, double S_k) {
 		return -2;
 }
 
-// double getS_1 (double input) {
-// 	if (input > 0.8)
-// 		return 1;
-// 	else if (input > 0.4)
-// 		return 0.75;
-// 	else
-// 		return 0.5;
-// }
 // return a random float in the specified range
 double randf(double fMin, double fMax){
     double f = (double)rand() / RAND_MAX;
@@ -66,10 +57,10 @@ double computesqrt(double input) {
 	int s_0 = 1;
 	int s_1;
 
-	if (input > 0.8) {
+	if (input > 0.84) {
 		s_1 = 0;
 	}
-	else if (input > 0.39) {
+	else if (input > .42) {
 		s_1 = -1;
 	}
 	else {
@@ -95,16 +86,11 @@ double computesqrt(double input) {
 }
 
 int main() {
-	
-
-	// cout << "stdlib   result: " << sqrt(input) << endl;
-	// cout << "computed result: " << S << endl;
-
 
 	// srand (time(NULL)); // seed rand()
 	srand(100);
 
-	 // set cout precision to 16 decimal places
+	// set cout precision to 16 decimal places
 	cout << fixed << setprecision(16);
 
 	// max error found
@@ -113,8 +99,6 @@ int main() {
 	// for i random tests
 	for(int i=1; i<=NUM_TESTS; i++){
 
-		// provide dividend (x) and divisor (d)
-		// assumed to have previously been normalized to [1/2 ... 1)
 		double input = randf(.25,1);
 
 		// compute results
@@ -128,8 +112,8 @@ int main() {
 
 			// report results
 			cout << "Test " << i << ": sqrt(" << input << ")" << endl;
-			cout << "\tExpected result: " << expexted_result << endl;
-			cout << "\tComputed result: " << computed_result << endl;
+			// cout << "\tExpected result: " << expexted_result << endl;
+			// cout << "\tComputed result: " << computed_result << endl;
 			cout << "\tError:           " << error << endl << endl;
 		}
 	}
