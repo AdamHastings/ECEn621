@@ -53,31 +53,20 @@ double computesqrt(double input) {
 		cout << "Error: Input needs to be in the range [0.25, 1)" << endl;
 		return 0;
 	}
-	// TODO: We need some kind of lookup table for s_0 and s_1
-	int s_0;// = 1;
-	int s_1;// = -1;
-	double S;
 
+	double S; // Value
+	double s; // Digit at position k
 
-	if (input > 0.8) {
-		s_0 = 1;
-		s_1 = 0;
+	// Initialize
+	if (input > 0.8) 
 		S = 1;
-	}
-	else if (input > 0.4) {
-		s_0 = 1;
-		s_1 = -1;
+	else if (input > 0.4)
 		S = 0.75;
-	}
-	else {
-		s_0 = 0;
-		s_1 = 2;
+	else
 		S = 0.5;
-	}
-
 	double z = RADIX * ( input - pow(S, 2));
-	double s;
 
+	// Iterate
 	for (int i=2; i < K; i++) {
 		s = getNextDigit(z, S, i);
 		z = (RADIX * z) - (2 * S * s) - (pow(s, 2)* pow(RADIX, -(i)));
