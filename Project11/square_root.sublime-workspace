@@ -1,0 +1,389 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"lo",
+				"lowerBound"
+			],
+			[
+				"ge",
+				"getLowerBound"
+			],
+			[
+				"cm",
+				"computesqrt"
+			],
+			[
+				"S",
+				"S_1"
+			],
+			[
+				"get",
+				"getS_1"
+			],
+			[
+				"R",
+				"RADIX"
+			],
+			[
+				"roun",
+				"rounded_up"
+			],
+			[
+				"x",
+				"x_prime"
+			],
+			[
+				"rec",
+				"reciprocal_table"
+			],
+			[
+				"re",
+				"reciprocal_table"
+			],
+			[
+				"ta",
+				"target_directory"
+			],
+			[
+				"tar",
+				"target_wire"
+			],
+			[
+				"le",
+				"length"
+			],
+			[
+				"des",
+				"desired_length"
+			],
+			[
+				"lut",
+				"target_LUT"
+			],
+			[
+				"target",
+				"target_directory"
+			],
+			[
+				"trim",
+				"trimmed_flipped"
+			],
+			[
+				"flip",
+				"flipped_str"
+			],
+			[
+				"fli",
+				"flipped_str"
+			],
+			[
+				"hex",
+				"hex_init"
+			],
+			[
+				"ne",
+				"nextline"
+			],
+			[
+				"find",
+				"find_between"
+			],
+			[
+				"ra",
+				"randomLUTnumber"
+			],
+			[
+				"L",
+				"LUT_count"
+			],
+			[
+				"LU",
+				"LUT6_count"
+			],
+			[
+				"mod",
+				"moduleName"
+			],
+			[
+				"mo",
+				"moduleName"
+			],
+			[
+				"home",
+				"home_directory"
+			],
+			[
+				"str",
+				"strlength"
+			],
+			[
+				"di",
+				"directory"
+			],
+			[
+				"run",
+				"runCanyonFollowing"
+			],
+			[
+				"op",
+				"opticalFlow"
+			],
+			[
+				"r_",
+				"r_div_vy"
+			],
+			[
+				"alt",
+				"alt_c"
+			],
+			[
+				"ro",
+				"roll_c"
+			],
+			[
+				"ya",
+				"yawrate_c"
+			],
+			[
+				"sum_abs_",
+				"sum_abs_ofr"
+			],
+			[
+				"sum_ab",
+				"sum_abs_ofl"
+			],
+			[
+				"sum_o",
+				"sum_ofyl"
+			],
+			[
+				"ofy",
+				"ofy_l"
+			],
+			[
+				"ofx",
+				"ofx_l"
+			],
+			[
+				"opt",
+				"opticalFlow"
+			],
+			[
+				"ol",
+				"opticalFlow"
+			],
+			[
+				"gr",
+				"grid_dim"
+			],
+			[
+				"coll",
+				"COLLISION_AVOIDANCE"
+			],
+			[
+				"A",
+				"COLLISION_AVOIDANCE"
+			],
+			[
+				"mul",
+				"multi_img"
+			],
+			[
+				"gri",
+				"gridsize"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/adam/ECEn621/Project11/square_root.cpp",
+		"/home/adam/ECEn621/Project11/results.txt",
+		"/home/adam/ECEn621/Project10/square_root.cpp",
+		"/home/adam/ECEn621/Project8/submission.cpp",
+		"/home/adam/ECEn621/Project9/square_root.cpp",
+		"/home/adam/ECEn621/Project8/division_algorithm.cpp",
+		"/home/adam/ECEn631/hw7/test.py",
+		"/home/adam/ECEn621/Project5/MN.cpp",
+		"/home/adam/ECEn621/Project8/computeTable.cpp",
+		"/home/adam/ECEn621/Project8/reciprocal_table.cpp",
+		"/home/adam/ECEn631/hw6/monoVO-python/test.py",
+		"/home/adam/ECEn631/hw6/monoVO-python/visual_odometry.py",
+		"/home/adam/ECEn631/hw4/canyonfollowing/hw4/main.py",
+		"/home/adam/ipassurance/python/sanitizeBoundaryNets_tampered.py",
+		"/home/adam/ipassurance/bash/generateConformalDofile_tampered.sh",
+		"/home/adam/ipassurance/bash/all_dt.sh",
+		"/home/adam/ipassurance/dt/counter_dt/counter_dt_impl_backdoor.v",
+		"/home/adam/ipassurance/dt/mctrl_dt/mctrl_dt_impl_backdoor.v",
+		"/home/adam/ipassurance/bash/all.sh",
+		"/home/adam/ipassurance/python/modifyDTDesigns.py",
+		"/home/adam/Desktop/Dr. Sethumadhavan,",
+		"/home/adam/ipassurance/dt/aes128_dt/aes128_dt.srcs/constrs_1/imports/opencores/top.xdc",
+		"/home/adam/ipassurance/tcl/modifyDesign_dt.tcl",
+		"/home/adam/ipassurance/bash/runSensitivityTest_dt.sh",
+		"/home/adam/ipassurance/dt/mips_16_dt/mips_16_dt_impl_changedlut.v",
+		"/home/adam/ipassurance/dt/mips_16_dt/mips_16_dt_impl.v",
+		"/home/adam/ipassurance/dt/mips_16_dt/sampeout.v",
+		"/home/adam/ipassurance/base/all_base.sh",
+		"/home/adam/ipassurance/bash/all_base.sh",
+		"/home/adam/ipassurance/weakdt/renameProjects.tcl",
+		"/home/adam/ipassurance/tcl/renameProjects.tcl",
+		"/home/adam/ECEn631/hw4/holodeck_sim/main.py",
+		"/home/adam/ECEn631/hw4/holodeck_sim/uav_sim.py"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "square_root.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 193.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -7,11 +7,12 @@
 
 using namespace std;
 
-#define RADIX 4
-#define A 2
+#define RADIX 2
+#define A 1
 #define RHO ((A)/(RADIX * 1.0 - 1))
 #define K 32
-#define NUM_TESTS 1
+#define NUM_TESTS 1000
+#define DELTA 1
 
 double getLowerBound(int d, double S, int k) {
 	return 2 * S * (d - RHO) + pow((d - RHO), 2) * pow(RADIX, -(k));
@@ -41,53 +42,21 @@ int getNextDigit(double z_k, double S_k, int k) {
 		return -2;
 }
 
-// return a random float in the specified range
-double randf(double fMin, double fMax){
-    double f = (double)rand() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
-}
-
-
 double computesqrt(double input) {
 	if (input < 0.25 || input >= 1) {
 		cout << "Error: Input needs to be in the range [0.25, 1)" << endl;
 		return 0;
 	}
-	cout << "Input: " << input << endl << endl;
 
-	double S; // Value
-	double s; // Digit at position k
+	
+}
 
-	if (input > 0.8) {
-		s = 1;
-		S = 1;
-	} else {
-		s = 0;
-		S = 0;
-	} 
-	cout << "i: " << 0 << "\tz: " << "x.xxxxxxxxxxxxxxxx" << "\tS: " << S << "\ts: " << s << endl;
 
-	// Initialize
-	if (input > 0.8) {
-		s = 0;
-		S = 1;
-	} else if (input > 0.4){
-		s = 1;
-		S = 0.75;
-	} else {
-		s = 2;
-		S = 0.5;
-	} 
-	double z = RADIX * ( input - pow(S, 2));
-	cout << "i: " << 1 << "\tz: " << z << "\tS: " << S << "\ts: " << s << endl;
-	// Iterate
-	for (int i=2; i < K; i++) {
-		s = getNextDigit(z, S, i);
-		z = (RADIX * z) - (2 * S * s) - (pow(s, 2)* pow(RADIX, -(i)));
-		S = S + (s * pow(RADIX, -(i)));
-		cout << "i: " << i << "\tz: " << z << "\tS: " << S << "\ts: " << s << endl;
-	}
-	return S;
+
+// return a random float in the specified range
+double randf(double fMin, double fMax){
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
 }
 
 int main() {
