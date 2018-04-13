@@ -11,7 +11,7 @@ using namespace std;
 #define A 1
 #define RHO ((A)/(RADIX * 1.0 - 1))
 #define K_MAX (64 + DELTA)
-#define NUM_TESTS 1000
+#define NUM_TESTS 1
 #define DELTA 1
 
 
@@ -64,6 +64,7 @@ double computesqrt(int (&x)[K_MAX]) {
 		old_S = S;
 		S += s * pow(2, -(i-1));
 		z = (2*z) + x[i] - (2*s*(old_S + S));
+		cout << "z: " << z << ", S: " << S << ", s: " << s << endl;
 	}
 
 	return S;
@@ -100,6 +101,7 @@ int main() {
 			createRandInput(input);
 			input_val = interpretArray(input);
 		}
+		cout << "Input: " << input_val << endl << endl;
 
 		// compute results
 		double expexted_result = sqrt(input_val);
@@ -118,7 +120,14 @@ int main() {
 		} else {
 			passed++;
 		}
+
+		cout << endl;
+		cout << "\tExpected result: " << expexted_result << endl;
+		cout << "\tComputed result: " << computed_result << endl;
+		cout << "\tError:           " << error << endl << endl;
 	}
+
+
 
 	// report number of tests, and maximum error
 	cout << "Tests run    :  " << NUM_TESTS << endl;
