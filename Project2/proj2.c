@@ -102,6 +102,11 @@ uint32_t normalize(uint32_t x){
      return x << E;     // normalized value
 }
 
+// uint32_t renormalize(uint64_t x){
+
+
+// }
+
 void myPrint(uint32_t x){
      printf("%f ", fixed_to_float(x));
      printBits(sizeof(x), &x);
@@ -126,39 +131,66 @@ uint32_t computeDivision(uint32_t numerator, uint32_t denominator) {
      for (uint32_t k=0; k<5; k++) {
           printf("\niteration %d \n",k);
 
-          uint32_t subtraction = 2 - denominator;
+          uint32_t subtraction = 0 - denominator;
           printf("subtraction: ");
           myPrint(subtraction);
 
-          denominator = denominator * subtraction;
+          // denominator = denominator * subtraction;
+
+          uint64_t denominator_long = (uint64_t) denominator * subtraction;
+
+          printf("denominator_long: ");
+          printBits(sizeof(denominator_long), &denominator_long);
+          denominator = (denominator_long+0x40000000) >> FRAC_BITS;
+
           // numerator = numerator * subtraction;
+
+          uint64_t numerator_long = (uint64_t) numerator * subtraction;
+          printf("numerator_long: ");
+          printBits(sizeof(numerator_long), &numerator_long);
+          printf("\n");
+
+
+          numerator = (numerator_long+0x40000000) >> FRAC_BITS;
 
           printf("denominator: ");
           myPrint(denominator);
 
-          // printf("numerator:   ");
-          // myPrint(numerator);
+          printf("numerator:   ");
+          myPrint(numerator);
 
      }
 
      // denominator -> 1
      // numerator -> Q  (N/D)
 
-          // printf("FINAL\n");
+     printf("FINAL\n");
 
-          // printf("denominator: ");
-          // myPrint(denominator);
+     printf("denominator: ");
+     myPrint(denominator);
 
-          // printf("numerator:   ");
-          // myPrint(numerator);
-     return numerator >> E;   // denormalize
+     printf("numerator:   ");
+     myPrint(numerator);
+
+
+     printf("e: %d\n",E);
+     numerator = numerator >> -1*(E+1);   // denormalize
+
+
+
+     printf("post normal num:   ");
+     myPrint(numerator);
+
+
+
+     return numerator;
 }
 
 int main() {
      WHOLE_BITS = 1;
      FRAC_BITS = 32-WHOLE_BITS;
 
-     uint32_t d = 8;
+     uint32_t d = 37;
 
      // printf("d:      %f\n", fixed_to_float(d));
      // printf("d:      ");
@@ -174,10 +206,16 @@ int main() {
      // if(fixed_to_float(d) != fix_to_float(d))
      //      printf("THEY DIDNT AGREE!\n");
 
-     uint32_t n = 0b0100000000000000000000000000000;
+     uint32_t n = 0b11001001000011111101101010100010;
+
+     printf("n :");
+     myPrint(n);
+
 
      uint32_t quotient = computeDivision(n, d);
-     printf("\nQuotient: %f\n", fixed_to_float(quotient));
+     printf("\nQuotient: \n");
+     myPrint(quotient);
+
 
      return 0;
 }
