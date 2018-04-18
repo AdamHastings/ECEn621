@@ -3,39 +3,73 @@
 #include <stdint.h>
 #include <math.h>
 #define M_PI 3.14159265358979323846
-#define PI_TIMES_10exp10 31415926535
-// Pi in fixed point: 11.00100100001111110111
-// Pi in 8.24 fixed-point: 00000011 00100100 00111111 01110000
+#define M_PI_2_32bits 11001001000011111101101010100010
 
+// Pi in fixed point: 11. 0010 0100 0011 1111 0111
+// pi/2             :  1. 1001 0010 0001 1111 1011 0101 0100 0100
 
+uint32_t WHOLE_BITS = 1;
+uint32_t FRAC_BITS = 31;
+uint32_t E = 0;
+
+// prints bits, assumes little endian, works for all types
+void printBits(size_t const size, void const * const ptr){
+    unsigned char *b = (unsigned char*) ptr;
+    unsigned char byte;
+    int i, j;
+
+    for (i=size-1;i>=0;i--){
+        for (j=7;j>=0;j--){
+            byte = (b[i] >> j) & 1;
+            printf("%u", byte);
+        }
+    }
+    puts("");
+}
+
+// int to fixed
 uint32_t int_to_fixedpt(uint32_t x) {
-      return x << 24;
+      return x << FRAC_BITS;
 }
 
-// 8.24 fixed-point representation
-double fixedpt_to_float(uint32_t x) {
-      uint32_t whole_bits = (x >> 24);
-      double fractional_bits = ((double) (((unsigned) x << 8) >> 8)) / (2 << (24 - 1));
-      double representation = (double) whole_bits + fractional_bits;
-      return representation;
-}
+// uint32_t float_to_fixed(double x){
+//      double res = x*pow(2,31);
+//      printf("scaled res: %f\n", res);
 
-double fix_to_float(uint32_t x){  // convert 1.15 fixed point to float
-     return (float)x / 0x8000;
-}
+//      printBits(sizeof(res),&res);
 
-// for(uint32_t try=0; try<50000000; try++){
-//      if(fix_to_float(try) != (float)try/(2*2*2*2*2*2*2*2*2*2*2*2*2*2*2))
-//        printf("error: 0x%x: %d, %f %f\n", try, try, (float)try/(2*2*2*2*2*2*2*2*2*2*2*2*2*2*2), fix_to_float(try));
+//      res = floor(res);
+//      // uint32_t res2 = (int) floor(res);
+//      uint32_t res2 = (int) res;
+//      printBits(sizeof(res2),&res2);
+
+//      return (int) (res+.5);
+
+//      // printf("pow: %f\n",pow(2,31));
+//      // return 0;
 // }
 
+// fixed to float
+double fixed_to_float(uint32_t x) {
+     uint32_t whole_bits = (x >> FRAC_BITS);
+     double fractional_bits = ((double) (((unsigned) x << WHOLE_BITS) >> WHOLE_BITS)) / (2 << (FRAC_BITS - 1));
+     if(fractional_bits<=0) fractional_bits *= -1; // take care of case when shift too far
+     double representation = (double) whole_bits + fractional_bits;
+     return representation;
+}
+
+// alternate fixed to float
+double fix_to_float(uint32_t x){
+     double y = (float) x / (1<<FRAC_BITS);
+     return y>0? y:y*-1; // get rid of negative if shift went to sign bit
+}
+
+// return the bit at this index
 int getBit(int num, int index){
      return (num & ( 1 << index )) >> index;
 }
 
-
-
-// Get the index of the most significant bit
+// get the index of the most significant bit (LSB is index 0)
 uint32_t get_MSB (uint32_t x) {
      if(x==0) return 0;
      uint32_t i;
@@ -43,56 +77,6 @@ uint32_t get_MSB (uint32_t x) {
      return i-1;
 }
 
-uint32_t computeDivision(uint32_t numerator, uint32_t denominator) {
-
-     for(uint32_t i=0; i<100; i++){
-          printf("b: %d\n",getBit(i,1));
-          printf("i=%d, msb=%d\n",i,get_MSB(i));
-     }
-
-
-     // printf("numerator: %x\n", numerator);
-     // printf("denominator: %x\n",  denominator);
-
-     // printf("numerator: %f\n", fixedpt_to_float(numerator));
-     // printf("denominator: %f\n",  fixedpt_to_float(denominator));
-
-     // First normalize denominator to between 0.5 and 1
-     uint32_t msb = get_MSB(denominator);
-     uint32_t shift = (msb - 24);
-
-     // uint32_t d_norm = denominator;
-     uint32_t d_norm = denominator >> shift;
-
-     printf("Denominator: %f, MSB: %d, shift: %d, Result: %f\n", fixedpt_to_float(denominator), msb, shift, fixedpt_to_float(d_norm));
-     // int d_norm = denominator;
-
-     uint32_t iterations = 5;
-     for (uint32_t i=0; i<iterations; i++) {
-          // First normalize denominator to between 0.5 and 1
-          // int msb = get_MSB(d_norm);
-          // int shift = (msb - 24);
-
-          // uint32_t d_norm = d_norm >> shift;
-          // printf("Denominator: %f, MSB: %d, shift: %d, Result: %f\n", fixedpt_to_float(denominator), msb, shift, fixedpt_to_float(d_norm));
-          printf("numerator: %f\n", fixedpt_to_float(numerator));
-          printf("denominator: %f\n",  fixedpt_to_float(d_norm));
-
-          uint32_t subtraction = int_to_fixedpt(2) - d_norm;
-          printf("subtraction: %f\n\n", fixedpt_to_float(subtraction));
-
-          numerator = numerator * subtraction;
-          d_norm = d_norm * subtraction;
-
-
-          //numerator = numerator >> shift;
-     }
-     printf("numerator: %f\n", fixedpt_to_float(numerator));
-     printf("denominator: %f\n",  fixedpt_to_float(denominator));
-
-     uint32_t Q = numerator >> shift; // shift;
-     return Q;
-}
 
 
 double computeDelta_sine(double delta) {
@@ -111,71 +95,89 @@ double recurrence_cos(double sin_theta, double cos_theta, double sine, double co
       return cosine*cos_theta - sine*sin_theta;
 }
 
+// normalize by shifting MS-1 to MSB [.5, 1]
+uint32_t normalize(uint32_t x){
+     E = 30 - get_MSB(x);      // shift value to normalize by
+     printf("normalize shifted denominator by %d\n",E);
+     return x << E;     // normalized value
+}
+
+void myPrint(uint32_t x){
+     printf("%f ", fixed_to_float(x));
+     printBits(sizeof(x), &x);
+}
+
+uint32_t computeDivision(uint32_t numerator, uint32_t denominator) {
+
+     // numerator comes in in fixed point
+     // denominator is an int [1,255]
+
+     printf("\n");
+     printf("divide: %f / %d\n", fixed_to_float(numerator), denominator);
+
+     // denominator must be pre normalized
+     denominator = normalize(denominator);
+     printf("denominator: %f\n", fixed_to_float(denominator));
+     printf("denominator: ");
+     printBits(sizeof(denominator), &denominator);
+     printf("\n");
 
 
+     for (uint32_t k=0; k<5; k++) {
+          printf("\niteration %d \n",k);
 
-// Let's pick an arbitrary 8.24 fixed-point numbering system.
-// Also, we can convert to float for printing!
+          uint32_t subtraction = 2 - denominator;
+          printf("subtraction: ");
+          myPrint(subtraction);
+
+          denominator = denominator * subtraction;
+          // numerator = numerator * subtraction;
+
+          printf("denominator: ");
+          myPrint(denominator);
+
+          // printf("numerator:   ");
+          // myPrint(numerator);
+
+     }
+
+     // denominator -> 1
+     // numerator -> Q  (N/D)
+
+          // printf("FINAL\n");
+
+          // printf("denominator: ");
+          // myPrint(denominator);
+
+          // printf("numerator:   ");
+          // myPrint(numerator);
+     return numerator >> E;   // denormalize
+}
+
 int main() {
+     WHOLE_BITS = 1;
+     FRAC_BITS = 32-WHOLE_BITS;
 
-     uint32_t quotient = computeDivision(int_to_fixedpt(2), int_to_fixedpt(4));
-     printf("Quotient: %f\n", fixedpt_to_float(quotient));
+     uint32_t d = 8;
 
-     /*
-     int N_array[3] = {20, 50, 100};
+     // printf("d:      %f\n", fixed_to_float(d));
+     // printf("d:      ");
+     // printBits(sizeof(d), &d);
 
-     // pi in 8.24 fixed-point notation
-     uint32_t pi = 0b00000011001001000011111101110000;
+     // uint32_t d_norm = normalize(d); // normalize d to [.5,1]
+     // printf("e:      %d\n", E);
+     // printf("d_norm: %f\n", fixed_to_float(d_norm));
+     // printf("d_norm: ");
+     // printBits(sizeof(d_norm), &d_norm);
 
-     for (int i=0; i < 1; i++) {
-          int N = N_array[i];
-          int length = snprintf(NULL, 0, "%d", N );
-          char* str = malloc( sizeof(char) * (length + 5));
-          snprintf(str, length + 5, "%d.txt", N);
 
-          FILE *fp;
-          fp = fopen(str, "w+");
-          free(str);
+     // if(fixed_to_float(d) != fix_to_float(d))
+     //      printf("THEY DIDNT AGREE!\n");
 
-          // Commented out for project 2
-          //double delta_new = fixedpt_to_float(computeDivision(pi, int_to_fixedpt(2*N)));
-          int32_t delta_fxp = computeDivision(pi, int_to_fixedpt(2*N));
-          double delta = M_PI / (2 * N);
-          printf("delta: %f, delta_fxp: %f\n", delta, fixedpt_to_float(delta_fxp));
-          double sin_theta = computeDelta_sine(delta);
-          double cos_theta = computeDelta_cosine(delta);
-          double sine = 1;
-          double cosine = 0;
+     uint32_t n = 0b0100000000000000000000000000000;
 
-          fprintf(fp, "value        ours      lib      diff\n");
-          fprintf(fp, "---------------------------------------------------------\n");
-
-          for (int j=0; j < N*4; j++) {
-               if (j == 0) {
-                    sine = 0;
-                    cosine = 1;
-               } else if (j == N) {
-                    sine = 1;
-                    cosine = 0;
-               } else if (j == 2*N) {
-                    sine = 0;
-                    cosine = -1;
-               } else if (j == 3*N) {
-                    sine = -1;
-                    cosine = 0;
-               } else {
-                    double old_sine = sine;
-                    sine = recurrence_sin(sin_theta, cos_theta, sine, cosine);
-                    cosine = recurrence_cos(sin_theta, cos_theta, old_sine, cosine);
-               }
-               double theta = j*delta;
-               double theta_deg = theta*180/M_PI;
-               fprintf(fp, "sin(%6.2f) %10.6f %10.6f %10.6f\n",theta_deg, sine, sin(theta), sine-sin(theta));
-               fprintf(fp, "cos(%6.2f) %10.6f %10.6f %10.6f\n",theta_deg, cosine, cos(theta), cosine-cos(theta));
-          }
-          fclose(fp);
-     }*/
-
+     uint32_t quotient = computeDivision(n, d);
+     printf("\nQuotient: %f\n", fixed_to_float(quotient));
 
      return 0;
 }
