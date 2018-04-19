@@ -21,6 +21,7 @@ double interpretArray(int x[K_MAX]) {
 	for (int i=0; i < K_MAX; i++) {
 		val += x[i] * pow(2, -i);
 	}
+     return val;
 }
 
 int getNextDigit(double S, int k, double x, double z) {
@@ -39,9 +40,9 @@ int getNextDigit(double S, int k, double x, double z) {
 double computesqrt(int (&x)[K_MAX]) {
 
 	double X, S, old_S, s, z;
-	
+
 	// k = 0
-	X = x[0]; 
+	X = x[0];
 
 	// k = 1
 	X += x[1] * pow(2, -1);
@@ -92,7 +93,7 @@ int main() {
 
 	// for i random tests
 	for(int i=1; i<=NUM_TESTS; i++){
-		
+
 		int input[K_MAX];
 		double input_val;
 
